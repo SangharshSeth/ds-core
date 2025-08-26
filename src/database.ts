@@ -67,6 +67,37 @@ class PostgresDatabase {
             console.log("Database disconnected");
         }
     }
+
+    getConnectionInfoHTML(): Record<
+        string,
+        string | number | boolean | {
+            totalCount: number;
+            idleCount: number;
+            waitingCount: number;
+        } | null
+    > {
+        const poolStats = this.pool
+            ? {
+                totalCount: this.pool.totalCount,
+                idleCount: this.pool.idleCount,
+                waitingCount: this.pool.waitingCount,
+            }
+            : null;
+
+        const info = {
+            connected: this.connected,
+            hasPool: this.pool !== null,
+            instanceCreated: PostgresDatabase.instance !== null,
+            host: "postgres",
+            database: process.env["POSTGRES_DB"] || "Not set",
+            user: process.env["POSTGRES_USER"] || "Not set",
+            port: 5432,
+            maxConnections: 20,
+            poolStats,
+        };
+
+        return info;
+    }
 }
 
 export const db = PostgresDatabase.getInstance();

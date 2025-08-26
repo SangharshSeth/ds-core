@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     env_file:
@@ -15,6 +17,8 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    mem_limit: 512m
+    cpus: 0.5
   postgres:
     image: postgres:17
     env_file:
